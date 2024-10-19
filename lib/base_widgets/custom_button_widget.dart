@@ -15,6 +15,7 @@ class CustomButtonWidget extends StatelessWidget {
   final BorderRadiusGeometry? borderRadius;
   final BoxShadow? boxShadow;
   final Gradient? gradient;
+  final bool? isLoading;
 
   CustomButtonWidget({
     required this.text,
@@ -31,6 +32,7 @@ class CustomButtonWidget extends StatelessWidget {
     this.borderRadius,
     this.boxShadow,
     this.gradient,
+    this.isLoading,
   });
 
   @override
@@ -59,21 +61,30 @@ class CustomButtonWidget extends StatelessWidget {
         borderRadius: borderRadius ?? BorderRadius.circular(8.0),
         color: Colors.transparent,
         child: InkWell(
-          onTap: onPressed,
+          onTap: isLoading == true ? null : onPressed,
           splashColor: Colors.white.withOpacity(0.3),
           child: Container(
             padding: padding ?? const EdgeInsets.all(8.0),
             alignment: alignment,
             child: Center(
-              child: Text(
-                text,
-                style: textStyle ??
-                    TextStyle(
-                      color: textColor ?? Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+              child: isLoading == true
+                  ? SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            textColor ?? Colors.white),
+                      ),
+                    )
+                  : Text(
+                      text,
+                      style: textStyle ??
+                          TextStyle(
+                            color: textColor ?? Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
-              ),
             ),
           ),
         ),

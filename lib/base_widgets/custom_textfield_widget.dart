@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatefulWidget {
   final String labelText;
   final String hintText;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final bool obscureText;
   final TextInputType keyboardType;
   final IconData icon;
@@ -14,6 +14,7 @@ class CustomTextField extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final Color? fillColor;
   final bool filled;
+  final FormFieldValidator<String>? validator;
 
   const CustomTextField({
     required this.labelText,
@@ -29,6 +30,7 @@ class CustomTextField extends StatefulWidget {
     this.padding,
     this.fillColor,
     this.filled = false,
+    this.validator,
   });
 
   @override
@@ -48,11 +50,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     return Padding(
       padding: widget.padding ?? EdgeInsets.zero,
-      child: TextField(
+      child: TextFormField(
         controller: widget.controller,
         obscureText: _obscureText,
         keyboardType: widget.keyboardType,
         style: widget.textStyle ?? DefaultTextStyle.of(context).style,
+        validator: widget.validator,
         decoration: InputDecoration(
           labelText: widget.labelText,
           hintText: widget.hintText,
