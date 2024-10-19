@@ -1,0 +1,45 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin"
+    id 'com.google.gms.google-services' 
+}
+
+android {
+    namespace = "com.example.car_workshop_app" 
+    compileSdk = 34 
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        applicationId = "com.example.car_workshop_app" 
+        minSdk = 23
+        targetSdk = 34 
+        versionCode = flutter.versionCode 
+        versionName = flutter.versionName 
+    }
+
+    buildTypes {
+        release {
+            // Use your own signing config for the release build
+            signingConfig = signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.." // Path to the Flutter source
+}
+
+dependencies {
+    implementation platform('com.google.firebase:firebase-bom:33.4.0') 
+    // Add any other dependencies needed
+}
