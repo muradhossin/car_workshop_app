@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class LoginService {
+class AuthService {
   final FirebaseFirestore firestore;
-  LoginService({required this.firestore});
+  AuthService({required this.firestore});
 }

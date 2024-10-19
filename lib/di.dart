@@ -1,5 +1,5 @@
-import 'package:car_workshop_app/features/login/controllers/login_controller.dart';
-import 'package:car_workshop_app/features/login/services/login_service.dart';
+import 'package:car_workshop_app/features/auth/controllers/auth_controller.dart';
+import 'package:car_workshop_app/features/auth/services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,10 +17,10 @@ class Di {
     Get.lazyPut<SharedPreferences>(() => sharedPreferences);
 
     // Services
-    Get.lazyPut<LoginService>(() => LoginService(firestore: firestore));
+    Get.lazyPut<AuthService>(() => AuthService(firestore: firestore));
 
     // Controllers
-    Get.lazyPut<LoginController>(() => LoginController(loginService: Get.find<LoginService>()));  
+    Get.lazyPut<AuthController>(() => AuthController(authService: Get.find<AuthService>()));  
 
   }
 }
