@@ -21,7 +21,7 @@ class UserCheckoutController extends GetxController implements GetxService{
       Get.offAllNamed(AppRoutes.getUserDashboardRoute());
       Get.find<UserCartController>().clearCart(showSnack: false);
     } catch (e) {
-      showCustomSnacker('Error', 'Failed to place order: $e', isError: true);
+      showCustomSnacker('Error', e.toString(), isError: true);
     } finally {
       isLoader = false;
       update();

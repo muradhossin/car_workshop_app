@@ -20,6 +20,7 @@ class UserCheckoutService {
       await firestore.collection(AppConstants.collectionOrders).add(orderWithId.toMap(Get.context!));
     } catch (e) {
       log('Error placing order: $e', name: 'UserCheckoutService');
+      throw Exception('Failed to place order. Please try again.');
     }
   }
 
@@ -33,7 +34,7 @@ class UserCheckoutService {
       int maxOrderId = 1000;
       for (var doc in orderDocs.docs) {
         final orderData = doc.data();
-        final orderId = orderData['orderId'] as int?;
+        final orderId = int.tryParse(orderData['orderId']);
         if (orderId != null && orderId > maxOrderId) {
           maxOrderId = orderId;
         }
