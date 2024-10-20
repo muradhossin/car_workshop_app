@@ -14,12 +14,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    Get.find<AuthController>().loginTextControllerInit();
-  }
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: Dimensions.padding * 2),
                     CustomTextField(
-                      controller: authController.emailController,
+                      controller: emailController,
                       labelText: 'Email',
                       hintText: 'Enter your email',
                       icon: Icons.email,
@@ -61,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: Dimensions.padding),
                     CustomTextField(
-                      controller: authController.passwordController,
+                      controller: passwordController,
                       labelText: 'Password',
                       hintText: 'Enter your password',
                       icon: Icons.lock,
@@ -78,9 +74,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: Dimensions.padding * 2),
                     CustomButtonWidget(
+                      isLoading: authController.isLoading,
                       text: 'Login',
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {}
+                        if (_formKey.currentState!.validate()) {
+                          authController.login(emailController.text.trim(), passwordController.text.trim());
+                        }
                       },
                     ),
                     const SizedBox(height: Dimensions.padding),
@@ -105,7 +104,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    Get.find<AuthController>().disposeLoginTextControllers();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 }

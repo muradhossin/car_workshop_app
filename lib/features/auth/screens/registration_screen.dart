@@ -14,12 +14,13 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    Get.find<AuthController>().registrationTextControllerInit();
-  }
+  TextEditingController registrationEmailController = TextEditingController();
+  TextEditingController registrationPasswordController =
+      TextEditingController();
+  TextEditingController registrationConfirmPasswordController =
+      TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomTextField(
-                      controller: authController.nameController,
+                      controller: nameController,
                       labelText: 'Name',
                       hintText: 'Enter your name',
                       icon: Icons.person,
@@ -51,7 +52,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     const SizedBox(height: 16.0),
                     CustomTextField(
-                      controller: authController.registrationEmailController,
+                      controller: registrationEmailController,
                       labelText: 'Email',
                       hintText: 'Enter your email',
                       icon: Icons.email,
@@ -67,7 +68,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     const SizedBox(height: 16.0),
                     CustomTextField(
-                      controller: authController.phoneController,
+                      controller: phoneController,
                       labelText: 'Phone',
                       hintText: 'Enter your phone number',
                       icon: Icons.phone,
@@ -80,7 +81,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     const SizedBox(height: 16.0),
                     CustomTextField(
-                      controller: authController.registrationPasswordController,
+                      controller: registrationPasswordController,
                       labelText: 'Password',
                       hintText: 'Enter your password',
                       icon: Icons.lock,
@@ -97,8 +98,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     const SizedBox(height: 16.0),
                     CustomTextField(
-                      controller:
-                          authController.registrationConfirmPasswordController,
+                      controller: registrationConfirmPasswordController,
                       labelText: 'Confirm Password',
                       hintText: 'Re-enter your password',
                       icon: Icons.lock,
@@ -107,9 +107,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         if (value == null || value.isEmpty) {
                           return 'Please confirm your password';
                         }
-                        if (value !=
-                            authController
-                                .registrationPasswordController?.text) {
+                        if (value != registrationPasswordController.text) {
                           return 'Passwords do not match';
                         }
                         return null;
@@ -159,7 +157,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       text: 'Register',
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {
-                          authController.register();
+                          authController.register(
+                            name: nameController.text.trim(),
+                            phone: phoneController.text.trim(),
+                            email: registrationEmailController.text.trim(),
+                            password: registrationPasswordController.text.trim(),
+                          );
                         }
                       },
                     )
@@ -175,7 +178,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   void dispose() {
-    Get.find<AuthController>().disposeRegistrationTextControllers();
+    registrationEmailController.dispose();
+    registrationPasswordController.dispose();
+    registrationConfirmPasswordController.dispose();
+    nameController.dispose();
+    phoneController.dispose();
     super.dispose();
   }
 }

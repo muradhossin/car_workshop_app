@@ -41,5 +41,6 @@ flutter {
 
 dependencies {
     implementation platform('com.google.firebase:firebase-bom:33.4.0') 
+    implementation 'com.google.android.gms:play-services-auth:19.2.0' 
     // Add any other dependencies needed
 }
