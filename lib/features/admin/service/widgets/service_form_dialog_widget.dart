@@ -71,6 +71,7 @@ class ServiceFormDialogWidgetState extends State<ServiceFormDialogWidget> {
                       },
                     ),
                     TextFormField(
+                      maxLines: 4,
                       controller: descriptionController,
                       decoration: const InputDecoration(labelText: 'Description'),
                       validator: (value) {
