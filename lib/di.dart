@@ -1,9 +1,12 @@
+import 'package:car_workshop_app/features/admin/service/controllers/admin_service_controller.dart';
+import 'package:car_workshop_app/features/admin/service/services/admin_service_service.dart';
 import 'package:car_workshop_app/features/auth/controllers/auth_controller.dart';
 import 'package:car_workshop_app/features/auth/services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 
 class Di {
@@ -21,11 +24,18 @@ class Di {
     final auth = FirebaseAuth.instance;
     Get.lazyPut<FirebaseAuth>(() => auth);
 
+    // Initialize Firebase Storage
+    final storage = FirebaseStorage.instance;
+    Get.lazyPut<FirebaseStorage>(() => storage);
+
     // Services
     Get.lazyPut<AuthService>(() => AuthService(firestore: firestore, auth: auth));
+    Get.lazyPut<AdminServiceService>(() => AdminServiceService(firestore: firestore, storage: storage));
+   
 
     // Controllers
     Get.lazyPut<AuthController>(() => AuthController(authService: Get.find<AuthService>()));  
+    Get.lazyPut<AdminServiceController>(() => AdminServiceController(adminServiceService: Get.find<AdminServiceService>()));
 
   }
 }

@@ -1,8 +1,8 @@
-import 'package:car_workshop_app/features/admin/dashboard/screens/admin_booking_screen.dart';
-import 'package:car_workshop_app/features/admin/dashboard/screens/admin_home_screen.dart';
-import 'package:car_workshop_app/features/admin/dashboard/screens/admin_mechanic_screen.dart';
-import 'package:car_workshop_app/features/admin/dashboard/screens/admin_profile_screen.dart';
-import 'package:car_workshop_app/features/admin/dashboard/screens/admin_reports_screen.dart';
+import 'package:car_workshop_app/features/admin/booking/screens/admin_booking_screen.dart';
+import 'package:car_workshop_app/features/admin/home/screens/admin_home_screen.dart';
+import 'package:car_workshop_app/features/admin/service/screens/admin_service_screen.dart';
+import 'package:car_workshop_app/features/admin/profile/screens/admin_profile_screen.dart';
+import 'package:car_workshop_app/features/admin/report/screens/admin_reports_screen.dart';
 import 'package:flutter/material.dart';
 
 class AdminDashboard extends StatefulWidget {
@@ -19,7 +19,7 @@ class AdminDashboardState extends State<AdminDashboard> {
   final List<Widget> _screens = [
     AdminHomeScreen(),
     AdminBookingScreen(),
-    AdminMechanicScreen(),
+    AdminServiceScreen(),
     AdminReportsScreen(),
     AdminProfileScreen(),
   ];
@@ -56,8 +56,8 @@ class AdminDashboardState extends State<AdminDashboard> {
             label: 'Bookings',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Mechanics',
+            icon: Icon(Icons.build),
+            label: 'Services',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart),
