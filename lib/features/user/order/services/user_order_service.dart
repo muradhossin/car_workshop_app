@@ -16,6 +16,7 @@ class UserOrderService {
   Future<List<OrderModel>> fetchRunningOrders() async {
     final runningSnapshot = await firestore
         .collection(AppConstants.collectionOrders)
+        .where('userId', isEqualTo: auth.currentUser?.uid)
         .where('orderStatus', whereIn: [OrderStatus.pending.name, OrderStatus.processing.name])
         .get();
 
@@ -28,6 +29,7 @@ class UserOrderService {
   Future<List<OrderModel>> fetchCompletedOrders() async {
     final historySnapshot = await firestore
         .collection(AppConstants.collectionOrders)
+        .where('userId', isEqualTo: auth.currentUser?.uid)
         .where('orderStatus', whereIn: [OrderStatus.completed.name, OrderStatus.cancelled.name])
         .get();
 
@@ -37,11 +39,20 @@ class UserOrderService {
       ..sort((a, b) => b.orderPlacedDateTime!.compareTo(a.orderPlacedDateTime!));
   }
 
+  Future<int> getTotalOrdersCount() async {
+    final totalOrdersSnapshot = await firestore
+        .collection(AppConstants.collectionOrders)
+        .where('userId', isEqualTo: auth.currentUser?.uid)
+        .get();
+    return totalOrdersSnapshot.docs.length;
+  }
+
   Future<OrderModel?> fetchOrderById(String orderId) async {
     try {
       final orderSnapshot = await firestore
           .collection(AppConstants.collectionOrders)
           .where('orderId', isEqualTo: orderId)
+          .where('userId', isEqualTo: auth.currentUser?.uid)
           .get();
       if (orderSnapshot.docs.isNotEmpty) {
         return OrderModel.fromMap(orderSnapshot.docs.first.data());
@@ -54,13 +65,6 @@ class UserOrderService {
       return null;
     }
   }
-
-  Future<int> getTotalOrdersCount() async {
-    final totalOrdersSnapshot = await firestore
-        .collection(AppConstants.collectionOrders)
-        .get();
-    return totalOrdersSnapshot.docs.length;
-  }
-
-
 }
+
+
