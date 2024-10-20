@@ -42,7 +42,6 @@ class UserOrderService {
   Future<int> getTotalOrdersCount() async {
     final totalOrdersSnapshot = await firestore
         .collection(AppConstants.collectionOrders)
-        .where('userId', isEqualTo: auth.currentUser?.uid)
         .get();
     return totalOrdersSnapshot.docs.length;
   }
