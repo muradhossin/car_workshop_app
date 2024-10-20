@@ -1,29 +1,79 @@
-import 'package:car_workshop_app/features/auth/controllers/auth_controller.dart';
+import 'package:car_workshop_app/features/admin/dashboard/screens/admin_booking_screen.dart';
+import 'package:car_workshop_app/features/admin/dashboard/screens/admin_home_screen.dart';
+import 'package:car_workshop_app/features/admin/dashboard/screens/admin_mechanic_screen.dart';
+import 'package:car_workshop_app/features/admin/dashboard/screens/admin_profile_screen.dart';
+import 'package:car_workshop_app/features/admin/dashboard/screens/admin_reports_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
 
   @override
-  State<AdminDashboard> createState() => _AdminDashboardState();
+  AdminDashboardState createState() => AdminDashboardState();
 }
 
-class _AdminDashboardState extends State<AdminDashboard> {
+class AdminDashboardState extends State<AdminDashboard> {
+  final PageController _pageController = PageController();
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    AdminHomeScreen(),
+    AdminBookingScreen(),
+    AdminMechanicScreen(),
+    AdminReportsScreen(),
+    AdminProfileScreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+    _pageController.jumpToPage(index);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final AuthController authController = Get.find<AuthController>();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('admin Dashboard'),
+      body: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: _screens,
       ),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () => authController.logout(),
-            child: const Text('Logout'),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'Bookings',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Mechanics',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart),
+            label: 'Reports',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Profile',
           ),
         ],
+        currentIndex: _currentIndex,
+        onTap: _onItemTapped,
+        backgroundColor:
+            Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+        selectedItemColor: Theme.of(context).primaryColor,
+        unselectedItemColor: Theme.of(context).unselectedWidgetColor,
       ),
     );
   }
