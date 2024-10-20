@@ -1,4 +1,7 @@
 
+
+import 'dart:developer';
+
 import 'package:car_workshop_app/constants/app_constants.dart';
 import 'package:car_workshop_app/features/user/order/models/order_model.dart';
 import 'package:car_workshop_app/features/user/order/models/order_status.dart';
@@ -33,5 +36,24 @@ class UserOrderService {
         .toList()
       ..sort((a, b) => b.orderPlacedDateTime!.compareTo(a.orderPlacedDateTime!));
   }
+
+  Future<OrderModel?> fetchOrderById(String orderId) async {
+    try {
+      final orderSnapshot = await firestore
+          .collection(AppConstants.collectionOrders)
+          .where('orderId', isEqualTo: orderId)
+          .get();
+      if (orderSnapshot.docs.isNotEmpty) {
+        return OrderModel.fromMap(orderSnapshot.docs.first.data());
+      } else {
+        log('Order not found for orderId: $orderId');
+        return null;
+      }
+    } catch (e) {
+      log('Error fetching order: $e');
+      return null;
+    }
+  }
+
 
 }

@@ -52,3 +52,12 @@ String formatDateTime(String? dateTimeString) {
   final DateFormat formatter = DateFormat('dd/MM/yyyy hh:mm a');
   return formatter.format(dateTime);
 }
+
+String dateOnly(String? dateTimeString) {
+  if (dateTimeString == null) {
+    return 'N/A';
+  }
+  final dateTime = DateTime.parse(dateTimeString);
+  final DateFormat formatter = DateFormat('yyyy-MM-dd');
+  return formatter.format(dateTime);
+}

@@ -6,6 +6,7 @@ import 'package:car_workshop_app/features/mechanic/dashboard/screens/mechanic_da
 import 'package:car_workshop_app/features/splash/screens/splash_screen.dart';
 import 'package:car_workshop_app/features/user/checkout/screens/user_checkout_screen.dart';
 import 'package:car_workshop_app/features/user/dashboard/screens/user_dashboard.dart';
+import 'package:car_workshop_app/features/user/order/screens/user_order_details_screen.dart';
 import 'package:car_workshop_app/main.dart';
 import 'package:get/get.dart';
 
@@ -18,6 +19,7 @@ class AppRoutes {
   static const String adminDashboard = '/admin-dashboard';
   static const String mechanicDashboard = '/mechanic-dashboard';
   static const String checkout = '/checkout';
+  static const String orderDetails = '/order-details';
 
   static getHomeRoute() => home;
   static getSplashRoute() => splash;
@@ -27,6 +29,7 @@ class AppRoutes {
   static getAdminDashboardRoute() => adminDashboard;
   static getMechanicDashboardRoute() => mechanicDashboard;
   static getCheckoutRoute() => checkout;
+  static getOrderDetailsRoute(String? orderId) => '$orderDetails?orderId=$orderId';
 
 
   static List<GetPage<dynamic>> getPages = [
@@ -68,6 +71,14 @@ class AppRoutes {
     GetPage(
       name: checkout,
       page: () =>  UserCheckoutScreen(),
+      middlewares: [AuthMiddleware()],
+    ),
+
+    GetPage(
+      name: orderDetails,
+      page: () =>  UserOrderDetailsScreen(
+        orderId: Get.parameters['orderId'],
+      ),
       middlewares: [AuthMiddleware()],
     )
 
