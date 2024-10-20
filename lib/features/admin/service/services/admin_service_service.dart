@@ -38,5 +38,32 @@ class AdminServiceService {
     return firestore.collection(AppConstants.collectionServices).doc().id;
   }
 
+  Future<void> updateService(ServiceModel service) async {
+    try {
+      DocumentReference docRef = firestore.collection(AppConstants.collectionServices).doc(service.id);
+      await docRef.update(service.toMap());
+    } catch (e) {
+      log('Error updating service: $e', name: 'AdminServiceService');
+    }
+  }
+
+  Future<void> deleteService(String serviceId) async {
+    try {
+      DocumentReference docRef = firestore.collection(AppConstants.collectionServices).doc(serviceId);
+      await docRef.delete();
+    } catch (e) {
+      log('Error deleting service: $e', name: 'AdminServiceService');
+    }
+  }
+
+  Stream<List<ServiceModel>> getServices() {
+    return firestore.collection(AppConstants.collectionServices).snapshots().map((snapshot) {
+      if (snapshot.docs.isEmpty) {
+        return <ServiceModel>[];
+      }
+      return snapshot.docs.map((doc) => ServiceModel.fromMap(doc.data())).toList();
+    });
+  }
+
 
 }

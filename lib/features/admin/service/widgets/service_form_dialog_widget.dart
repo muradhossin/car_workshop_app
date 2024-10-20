@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:car_workshop_app/base_widgets/custom_image_view_widget.dart';
 import 'package:car_workshop_app/core/utils.dart';
 import 'package:car_workshop_app/features/admin/service/controllers/admin_service_controller.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,6 @@ class ServiceFormDialogWidgetState extends State<ServiceFormDialogWidget> {
       nameController.text = widget.service!.name;
       descriptionController.text = widget.service!.description;
       priceController.text = widget.service!.price.toString();
-      _image = XFile(widget.service!.imageUrl);
     }
   }
 
@@ -95,7 +95,9 @@ class ServiceFormDialogWidgetState extends State<ServiceFormDialogWidget> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    if (_image != null)
+                    if (widget.service != null && widget.service!.imageUrl.isNotEmpty && _image == null)
+                      CustomImageViewer(imageUrl: widget.service!.imageUrl, height: 100, width: 200)
+                    else if (_image != null)
                       Image.file(
                         File(_image!.path),
                         height: 100,
@@ -121,21 +123,36 @@ class ServiceFormDialogWidgetState extends State<ServiceFormDialogWidget> {
               TextButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    if(_image == null) {
+                    if (widget.service == null && _image == null) {
                       showCustomSnacker('error', 'Please select an image', isError: true);
                       return;
                     }
-                    Get.find<AdminServiceController>().createService(
-                      nameController.text,
-                      descriptionController.text,
-                      double.parse(priceController.text),
-                      _image,
-                    );
+
+                    final adminServiceController = Get.find<AdminServiceController>();
+
+                    if (widget.service == null) {
+                      adminServiceController.createService(
+                        nameController.text.trim(),
+                        descriptionController.text.trim(),
+                        double.parse(priceController.text.trim()),
+                        _image,
+                      );
+                    } else {
+                      adminServiceController.updateService(
+                        widget.service!.id,
+                        nameController.text.trim(),
+                        descriptionController.text.trim(),
+                        double.parse(priceController.text.trim()),
+                        _image,
+                        serviceModel: widget.service,
+                      );
+                    }
+
                     Navigator.of(context).pop();
                   }
                 },
-                child: const Text('Save'),
-              ),
+                child: Text(widget.service == null ? 'Add' : 'Update'),
+              )
             ],
           );
         }
