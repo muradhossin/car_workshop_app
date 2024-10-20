@@ -19,4 +19,13 @@ class MechanicModel {
       'email': email,
     };
   }
+
+  factory MechanicModel.fromMap(Map<String, dynamic> map) {
+    return MechanicModel(
+      mechanicId: map['mechanicId'],
+      name: map['name'],
+      phoneNumber: map['phoneNumber'],
+      email: map['email'],
+    );
+  }
 }

@@ -115,4 +115,51 @@ class OrderModel {
       'totalAmount': totalAmount,
     };
   }
+
+
+  factory OrderModel.fromMap(Map<String, dynamic> map) {
+    return OrderModel(
+      orderId: map['orderId'],
+      make: map['make'],
+      model: map['model'],
+      year: map['year'],
+      registrationPlate: map['registrationPlate'],
+      name: map['name'],
+      phoneNumber: map['phoneNumber'],
+      email: map['email'],
+      bookingTitle: map['bookingTitle'],
+      dateRange: map['dateRange'] != null
+          ? DateTimeRange(
+        start: DateTime.parse(map['dateRange']['start']),
+        end: DateTime.parse(map['dateRange']['end']),
+      )
+          : null,
+      startTime: map['timeRange'] != null && map['timeRange']['start'] != null
+          ? TimeOfDay(
+        hour: int.parse(map['timeRange']['start'].split(':')[0]),
+        minute: int.parse(map['timeRange']['start'].split(':')[1].split(' ')[0]),
+      )
+          : null,
+      endTime: map['timeRange'] != null && map['timeRange']['end'] != null
+          ? TimeOfDay(
+        hour: int.parse(map['timeRange']['end'].split(':')[0]),
+        minute: int.parse(map['timeRange']['end'].split(':')[1].split(' ')[0]),
+      )
+          : null,
+      userId: map['userId'],
+      services: map['services'] != null
+          ? List<ServiceModel>.from(
+          map['services'].map((service) => ServiceModel.fromMap(service)))
+          : null,
+      assignedMechanic: map['assignedMechanic'] != null
+          ? MechanicModel.fromMap(map['assignedMechanic'])
+          : null,
+      orderPlacedDateTime: map['orderPlacedDateTime'] != null
+          ? DateTime.parse(map['orderPlacedDateTime'])
+          : null,
+      orderStatus: map['orderStatus'],
+      totalAmount: map['totalAmount'],
+    );
+  }
 }
+
