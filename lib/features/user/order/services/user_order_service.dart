@@ -55,5 +55,12 @@ class UserOrderService {
     }
   }
 
+  Future<int> getTotalOrdersCount() async {
+    final totalOrdersSnapshot = await firestore
+        .collection(AppConstants.collectionOrders)
+        .get();
+    return totalOrdersSnapshot.docs.length;
+  }
+
 
 }

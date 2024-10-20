@@ -1,5 +1,7 @@
 import 'package:car_workshop_app/features/admin/dashboard/widgets/custom_card_view.dart';
+import 'package:car_workshop_app/features/user/order/controllers/user_order_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AdminHomeScreen extends StatelessWidget {
   const AdminHomeScreen({super.key});
@@ -29,20 +31,44 @@ class AdminHomeScreen extends StatelessWidget {
               const SizedBox(height: 20),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomCardView(
-                      icon: Icons.car_repair,
-                      title: 'Total Bookings',
-                      value: '20',
-                    ),
-                    CustomCardView(
-                      icon: Icons.person,
-                      title: 'Total Mechanics',
-                      value: '10',
-                    ),
-                  ],
+                child: GetBuilder<UserOrderController>(
+                  builder: (userOrderController) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+
+                        FutureBuilder(
+                          future: userOrderController.getTotalOrdersCount(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const CustomCardView(
+                                icon: Icons.shopping_cart,
+                                title: 'Total Orders',
+                                value: '...',
+                              );
+                            } else if (snapshot.hasError) {
+                              return const CustomCardView(
+                                icon: Icons.error,
+                                title: 'Total Orders',
+                                value: 'Error',
+                              );
+                            } else {
+                              return CustomCardView(
+                                icon: Icons.shopping_cart,
+                                title: 'Total Orders',
+                                value: snapshot.data.toString().padLeft(2, '0'),
+                              );
+                            }
+                          },
+                        ),
+                        const CustomCardView(
+                          icon: Icons.person,
+                          title: 'Total Mechanics',
+                          value: '10',
+                        ),
+                      ],
+                    );
+                  }
                 ),
               ),
               const SizedBox(height: 20),
@@ -59,7 +85,7 @@ class AdminHomeScreen extends StatelessWidget {
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     child: ListTile(
-                      leading: Icon(Icons.assignment_turned_in),
+                      leading: const Icon(Icons.assignment_turned_in),
                       title: Text('Order ${index + 1}'),
                       subtitle: Text('Details of order ${index + 1}.'),
                     ),

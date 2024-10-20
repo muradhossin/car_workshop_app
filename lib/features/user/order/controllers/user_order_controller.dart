@@ -17,4 +17,8 @@ class UserOrderController extends GetxController implements GetxService {
   Future<OrderModel?> fetchOrderById(String orderId) async {
     return await userOrderService.fetchOrderById(orderId);
   }
+
+  Future<int> getTotalOrdersCount() async {
+    return await userOrderService.getTotalOrdersCount();
+  }
 }
