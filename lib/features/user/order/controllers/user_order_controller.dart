@@ -6,19 +6,23 @@ class UserOrderController extends GetxController implements GetxService {
   final UserOrderService userOrderService;
   UserOrderController({required this.userOrderService});
 
-  Future<List<OrderModel>> fetchRunningOrders() async {
-    return await userOrderService.fetchRunningOrders();
+  Stream<List<OrderModel>> fetchRunningOrders() {
+    return userOrderService.fetchRunningOrders();
   }
 
-  Future<List<OrderModel>> fetchCompletedOrders() async {
-    return await userOrderService.fetchCompletedOrders();
+  Stream<List<OrderModel>> fetchCompletedOrders() {
+    return userOrderService.fetchCompletedOrders();
   }
 
-  Future<OrderModel?> fetchOrderById(String orderId) async {
-    return await userOrderService.fetchOrderById(orderId);
+  Stream<OrderModel?> fetchOrderById(String orderId) {
+    return userOrderService.fetchOrderById(orderId);
   }
 
-  Future<int> getTotalOrdersCount() async {
-    return await userOrderService.getTotalOrdersCount();
+  Stream<int> getTotalOrdersCount() {
+    return userOrderService.getTotalOrdersCount();
+  }
+
+  Stream<List<OrderModel>> streamLatestOrdersForAdmin() {
+    return userOrderService.streamLatestOrdersForAdmin();
   }
 }

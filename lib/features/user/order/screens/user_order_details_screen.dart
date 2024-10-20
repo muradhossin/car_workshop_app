@@ -20,8 +20,8 @@ class UserOrderDetailsScreen extends StatelessWidget {
       ),
       body: GetBuilder<UserOrderController>(
         builder: (orderController) {
-          return FutureBuilder<OrderModel?>(
-            future: orderController.fetchOrderById(orderId!),
+          return StreamBuilder<OrderModel?>(
+            stream: orderController.fetchOrderById(orderId!),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());

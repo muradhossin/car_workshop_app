@@ -7,14 +7,13 @@ import 'package:get/get.dart';
 
 class OrderCardViewWidget extends StatelessWidget {
   final OrderModel order;
-  const OrderCardViewWidget({super.key, required this.order});
+  final Function onTap;
+  const OrderCardViewWidget({super.key, required this.order, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Get.toNamed(AppRoutes.getOrderDetailsRoute(order.orderId));
-      },
+      onTap: onTap as void Function()?,
       child: Card(
         child: ListTile(
           title: Text('Order ID: #${order.orderId}', style: const TextStyle(fontWeight: FontWeight.bold)),

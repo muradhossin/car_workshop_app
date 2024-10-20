@@ -1,5 +1,7 @@
 import 'package:car_workshop_app/features/admin/dashboard/widgets/custom_card_view.dart';
 import 'package:car_workshop_app/features/user/order/controllers/user_order_controller.dart';
+import 'package:car_workshop_app/features/user/order/models/order_model.dart';
+import 'package:car_workshop_app/features/user/order/widgets/order_card_view_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,8 +39,8 @@ class AdminHomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
 
-                        FutureBuilder(
-                          future: userOrderController.getTotalOrdersCount(),
+                        StreamBuilder(
+                          stream: userOrderController.getTotalOrdersCount(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return const CustomCardView(
@@ -77,20 +79,37 @@ class AdminHomeScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 10),
-              ListView.builder(
-                itemCount: 5,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    child: ListTile(
-                      leading: const Icon(Icons.assignment_turned_in),
-                      title: Text('Order ${index + 1}'),
-                      subtitle: Text('Details of order ${index + 1}.'),
-                    ),
+              GetBuilder<UserOrderController>(
+                builder: (orderController) {
+                  return StreamBuilder<List<OrderModel>>(
+                    stream: orderController.streamLatestOrdersForAdmin(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(child: Text('No orders found.'));
+                      }
+
+                      final completedOrders = snapshot.data!;
+
+                      return ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: completedOrders.length,
+                        itemBuilder: (context, index) {
+                          final order = completedOrders[index];
+                          return OrderCardViewWidget(
+                            order: order,
+                            onTap: () {
+                            },
+                          );
+                        },
+                      );
+                    },
                   );
-                },
+                }
               ),
             ],
           ),

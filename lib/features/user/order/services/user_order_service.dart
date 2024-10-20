@@ -13,56 +13,61 @@ class UserOrderService {
   final FirebaseAuth auth;
   UserOrderService({required this.firestore, required this.auth});
 
-  Future<List<OrderModel>> fetchRunningOrders() async {
-    final runningSnapshot = await firestore
+  Stream<List<OrderModel>> fetchRunningOrders() {
+    return firestore
         .collection(AppConstants.collectionOrders)
         .where('userId', isEqualTo: auth.currentUser?.uid)
         .where('orderStatus', whereIn: [OrderStatus.pending.name, OrderStatus.processing.name])
-        .get();
-
-    return runningSnapshot.docs
+        .snapshots()
+        .map((snapshot) => snapshot.docs
         .map((doc) => OrderModel.fromMap(doc.data()))
         .toList()
-      ..sort((a, b) => b.orderPlacedDateTime!.compareTo(a.orderPlacedDateTime!));
+      ..sort((a, b) => b.orderPlacedDateTime!.compareTo(a.orderPlacedDateTime!)));
   }
 
-  Future<List<OrderModel>> fetchCompletedOrders() async {
-    final historySnapshot = await firestore
+  Stream<List<OrderModel>> fetchCompletedOrders() {
+    return firestore
         .collection(AppConstants.collectionOrders)
         .where('userId', isEqualTo: auth.currentUser?.uid)
         .where('orderStatus', whereIn: [OrderStatus.completed.name, OrderStatus.cancelled.name])
-        .get();
-
-    return historySnapshot.docs
+        .snapshots()
+        .map((snapshot) => snapshot.docs
         .map((doc) => OrderModel.fromMap(doc.data()))
         .toList()
-      ..sort((a, b) => b.orderPlacedDateTime!.compareTo(a.orderPlacedDateTime!));
+      ..sort((a, b) => b.orderPlacedDateTime!.compareTo(a.orderPlacedDateTime!)));
   }
 
-  Future<int> getTotalOrdersCount() async {
-    final totalOrdersSnapshot = await firestore
+  Stream<OrderModel?> fetchOrderById(String orderId) {
+    return firestore
         .collection(AppConstants.collectionOrders)
-        .get();
-    return totalOrdersSnapshot.docs.length;
-  }
-
-  Future<OrderModel?> fetchOrderById(String orderId) async {
-    try {
-      final orderSnapshot = await firestore
-          .collection(AppConstants.collectionOrders)
-          .where('orderId', isEqualTo: orderId)
-          .where('userId', isEqualTo: auth.currentUser?.uid)
-          .get();
-      if (orderSnapshot.docs.isNotEmpty) {
-        return OrderModel.fromMap(orderSnapshot.docs.first.data());
+        .where('orderId', isEqualTo: orderId)
+        .where('userId', isEqualTo: auth.currentUser?.uid)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        return OrderModel.fromMap(snapshot.docs.first.data());
       } else {
         log('Order not found for orderId: $orderId');
         return null;
       }
-    } catch (e) {
-      log('Error fetching order: $e');
-      return null;
-    }
+    });
+  }
+
+  Stream<int> getTotalOrdersCount() {
+    return firestore
+        .collection(AppConstants.collectionOrders)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
+  }
+
+  Stream<List<OrderModel>> streamLatestOrdersForAdmin() {
+    return firestore
+        .collection(AppConstants.collectionOrders)
+        .orderBy('orderPlacedDateTime', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((doc) => OrderModel.fromMap(doc.data()))
+        .toList());
   }
 }
 

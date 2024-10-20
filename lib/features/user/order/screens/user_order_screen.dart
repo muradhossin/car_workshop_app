@@ -1,6 +1,7 @@
 import 'package:car_workshop_app/features/user/order/controllers/user_order_controller.dart';
 import 'package:car_workshop_app/features/user/order/models/order_model.dart';
 import 'package:car_workshop_app/features/user/order/widgets/order_card_view_widget.dart';
+import 'package:car_workshop_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,8 +29,8 @@ class UserOrderScreen extends StatelessWidget {
             return TabBarView(
               children: [
                 // Running Orders Tab
-                FutureBuilder<List<OrderModel>>(
-                  future: orderController.fetchRunningOrders(),
+                StreamBuilder<List<OrderModel>>(
+                  stream: orderController.fetchRunningOrders(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -46,15 +47,20 @@ class UserOrderScreen extends StatelessWidget {
                       itemCount: runningOrders.length,
                       itemBuilder: (context, index) {
                         final order = runningOrders[index];
-                        return OrderCardViewWidget(order: order);
+                        return OrderCardViewWidget(
+                          order: order,
+                          onTap: () {
+                            Get.toNamed(AppRoutes.getOrderDetailsRoute(order.orderId));
+                          },
+                        );
 
                       },
                     );
                   },
                 ),
                 // Order History Tab
-                FutureBuilder<List<OrderModel>>(
-                  future: orderController.fetchCompletedOrders(),
+                StreamBuilder<List<OrderModel>>(
+                  stream: orderController.fetchCompletedOrders(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -71,7 +77,12 @@ class UserOrderScreen extends StatelessWidget {
                       itemCount: completedOrders.length,
                       itemBuilder: (context, index) {
                         final order = completedOrders[index];
-                        return OrderCardViewWidget(order: order);
+                        return OrderCardViewWidget(
+                          onTap: () {
+                            Get.toNamed(AppRoutes.getOrderDetailsRoute(order.orderId));
+                          },
+                          order: order,
+                        );
                       },
                     );
                   },
