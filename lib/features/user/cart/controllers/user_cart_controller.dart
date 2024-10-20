@@ -43,14 +43,14 @@ class UserCartController extends GetxController implements GetxService {
     }
   }
 
-  Future<void> clearCart() async {
+  Future<void> clearCart({bool showSnack = true}) async {
     try {
       await userCartService.clearCart();
       services.clear();
       update();
-      showCustomSnacker('Success', 'Cart cleared successfully.');
+      if(showSnack) showCustomSnacker('Success', 'Cart cleared successfully.');
     } catch (e) {
-      showCustomSnacker('Error', 'Failed to clear cart: $e', isError: true);
+      if(showSnack) showCustomSnacker('Error', 'Failed to clear cart: $e', isError: true);
     }
   }
 

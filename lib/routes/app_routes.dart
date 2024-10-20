@@ -4,6 +4,7 @@ import 'package:car_workshop_app/features/auth/screens/login_screen.dart';
 import 'package:car_workshop_app/features/auth/screens/registration_screen.dart';
 import 'package:car_workshop_app/features/mechanic/dashboard/screens/mechanic_dashboard.dart';
 import 'package:car_workshop_app/features/splash/screens/splash_screen.dart';
+import 'package:car_workshop_app/features/user/checkout/screens/user_checkout_screen.dart';
 import 'package:car_workshop_app/features/user/dashboard/screens/user_dashboard.dart';
 import 'package:car_workshop_app/main.dart';
 import 'package:get/get.dart';
@@ -16,6 +17,7 @@ class AppRoutes {
   static const String userDashboard = '/user-dashboard';
   static const String adminDashboard = '/admin-dashboard';
   static const String mechanicDashboard = '/mechanic-dashboard';
+  static const String checkout = '/checkout';
 
   static getHomeRoute() => home;
   static getSplashRoute() => splash;
@@ -24,6 +26,7 @@ class AppRoutes {
   static getUserDashboardRoute() => userDashboard;
   static getAdminDashboardRoute() => adminDashboard;
   static getMechanicDashboardRoute() => mechanicDashboard;
+  static getCheckoutRoute() => checkout;
 
 
   static List<GetPage<dynamic>> getPages = [
@@ -61,6 +64,12 @@ class AppRoutes {
       page: () =>  MechanicDashboard(),
       middlewares: [AuthMiddleware()],
     ),
+
+    GetPage(
+      name: checkout,
+      page: () =>  UserCheckoutScreen(),
+      middlewares: [AuthMiddleware()],
+    )
 
     
     

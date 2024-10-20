@@ -4,6 +4,8 @@ import 'package:car_workshop_app/features/auth/controllers/auth_controller.dart'
 import 'package:car_workshop_app/features/auth/services/auth_service.dart';
 import 'package:car_workshop_app/features/user/cart/controllers/user_cart_controller.dart';
 import 'package:car_workshop_app/features/user/cart/services/user_cart_service.dart';
+import 'package:car_workshop_app/features/user/checkout/controllers/user_checkout_controller.dart';
+import 'package:car_workshop_app/features/user/checkout/services/user_checkout_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,12 +36,14 @@ class Di {
     Get.lazyPut<AuthService>(() => AuthService(firestore: firestore, auth: auth));
     Get.lazyPut<AdminServiceService>(() => AdminServiceService(firestore: firestore, storage: storage));
     Get.lazyPut<UserCartService>(() => UserCartService(firestore: firestore, auth: auth));
+    Get.lazyPut<UserCheckoutService>(() => UserCheckoutService(firestore: firestore, auth: auth));
    
 
     // Controllers
     Get.lazyPut<AuthController>(() => AuthController(authService: Get.find<AuthService>()));  
     Get.lazyPut<AdminServiceController>(() => AdminServiceController(adminServiceService: Get.find<AdminServiceService>()));
     Get.lazyPut<UserCartController>(() => UserCartController(userCartService: Get.find<UserCartService>()));
+    Get.lazyPut<UserCheckoutController>(() => UserCheckoutController(userCheckoutService: Get.find<UserCheckoutService>()));
 
   }
 }

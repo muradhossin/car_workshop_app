@@ -1,5 +1,6 @@
 import 'package:car_workshop_app/base_widgets/custom_button_widget.dart';
 import 'package:car_workshop_app/constants/app_constants.dart';
+import 'package:car_workshop_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:car_workshop_app/features/user/cart/controllers/user_cart_controller.dart';
@@ -95,6 +96,7 @@ class UserCartScreen extends StatelessWidget {
                       backgroundColor: Theme.of(context).primaryColor,
                     ),
                     onPressed: () {
+                      Get.toNamed(AppRoutes.getCheckoutRoute());
                     },
                     child: const Text('Checkout', style: TextStyle(color: Colors.white)),
                   ),
