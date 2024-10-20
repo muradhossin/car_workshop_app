@@ -1,6 +1,8 @@
 import 'package:car_workshop_app/base_widgets/custom_image_view_widget.dart';
 import 'package:car_workshop_app/features/admin/service/models/service_model.dart';
+import 'package:car_workshop_app/features/user/cart/controllers/user_cart_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../constants/app_constants.dart';
 
@@ -43,15 +45,19 @@ class ServiceCardState extends State<ServiceCardWidget> {
                 height: 180,
                 width: double.infinity,
               ),
-              Positioned(
-                bottom: 8,
-                right: 8,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Handle add to cart action
-                  },
-                  child: Text('Add to Cart'),
-                ),
+              GetBuilder<UserCartController>(
+                builder: (cartController) {
+                  return Positioned(
+                    bottom: 8,
+                    right: 8,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        cartController.addToCart(widget.service);
+                      },
+                      child: Text('Add to Cart'),
+                    ),
+                  );
+                }
               ),
             ],
           ),

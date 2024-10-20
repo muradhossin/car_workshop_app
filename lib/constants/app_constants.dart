@@ -5,4 +5,5 @@ class AppConstants {
   // Collection names
   static const String collectionUsers = 'users';
   static const String collectionServices = 'services';
+  static const String collectionCarts = 'carts';
 }
