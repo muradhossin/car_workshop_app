@@ -15,14 +15,6 @@ class UserHomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppConstants.appName),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: () {
-              // Handle notifications
-            },
-          ),
-        ],
       ),
       body: GetBuilder<AdminServiceController>(
         builder: (adminServiceController) {

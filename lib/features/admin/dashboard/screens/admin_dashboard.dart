@@ -22,7 +22,7 @@ class AdminDashboardState extends State<AdminDashboard> {
     AdminBookingScreen(),
     AdminServiceScreen(),
     AdminMechanicScreen(),
-    AdminReportsScreen(),
+    // AdminReportsScreen(),
     AdminProfileScreen(),
   ];
 
@@ -65,10 +65,10 @@ class AdminDashboardState extends State<AdminDashboard> {
             icon: Icon(Icons.people),
             label: 'Mechanics',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: 'Reports',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.bar_chart),
+          //   label: 'Reports',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Profile',
