@@ -1,5 +1,6 @@
 import 'package:car_workshop_app/features/admin/booking/screens/admin_booking_screen.dart';
 import 'package:car_workshop_app/features/admin/home/screens/admin_home_screen.dart';
+import 'package:car_workshop_app/features/admin/mechanics/screens/admin_mechanic_screen.dart';
 import 'package:car_workshop_app/features/admin/service/screens/admin_service_screen.dart';
 import 'package:car_workshop_app/features/admin/profile/screens/admin_profile_screen.dart';
 import 'package:car_workshop_app/features/admin/report/screens/admin_reports_screen.dart';
@@ -20,6 +21,7 @@ class AdminDashboardState extends State<AdminDashboard> {
     AdminHomeScreen(),
     AdminBookingScreen(),
     AdminServiceScreen(),
+    AdminMechanicScreen(),
     AdminReportsScreen(),
     AdminProfileScreen(),
   ];
@@ -58,6 +60,10 @@ class AdminDashboardState extends State<AdminDashboard> {
           BottomNavigationBarItem(
             icon: Icon(Icons.build),
             label: 'Services',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Mechanics',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart),
