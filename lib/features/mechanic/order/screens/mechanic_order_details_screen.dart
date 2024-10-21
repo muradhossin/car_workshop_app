@@ -106,7 +106,7 @@ class MechanicOrderDetailsScreen extends StatelessWidget {
                       ),
                     ),
 
-                    order.orderStatus != OrderStatus.cancelled.name || order.orderStatus != OrderStatus.completed.name ? const SizedBox.shrink() : Container(
+                    order.orderStatus == OrderStatus.cancelled.name || order.orderStatus == OrderStatus.completed.name ? const SizedBox.shrink() : Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                       child: CustomButtonWidget(
                         isLoading: orderController.isLoaded,
