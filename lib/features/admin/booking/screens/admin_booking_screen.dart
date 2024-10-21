@@ -1,5 +1,9 @@
+import 'package:car_workshop_app/features/user/order/controllers/user_order_controller.dart';
+import 'package:car_workshop_app/features/user/order/models/order_model.dart';
+import 'package:car_workshop_app/features/user/order/widgets/order_card_view_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:get/get.dart';
 
 class AdminBookingScreen extends StatefulWidget {
   @override
@@ -9,21 +13,42 @@ class AdminBookingScreen extends StatefulWidget {
 class _AdminBookingScreenState extends State<AdminBookingScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  late List<Booking> _selectedBookings;
+  late Map<DateTime, List<OrderModel>> _ordersForDays;
+  late final UserOrderController _orderController;
 
   @override
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    _selectedBookings = _getBookingsForDay(_selectedDay!);
+    _orderController = Get.find<UserOrderController>();
+    _ordersForDays = {};
+    _fetchAllOrders();
   }
 
-  List<Booking> _getBookingsForDay(DateTime day) {
-    return kEvents[day] ?? [];
+  Future<void> _fetchAllOrders() async {
+    _orderController.streamLatestOrdersForAdmin().listen((orders) {
+      Map<DateTime, List<OrderModel>> ordersByDay = {};
+      for (var order in orders) {
+        final orderDate = DateTime(order.orderPlacedDateTime!.year, order.orderPlacedDateTime!.month, order.orderPlacedDateTime!.day);
+        if (ordersByDay[orderDate] == null) {
+          ordersByDay[orderDate] = [];
+        }
+        ordersByDay[orderDate]!.add(order);
+      }
+
+      setState(() {
+        _ordersForDays = ordersByDay;
+      });
+    });
   }
 
-  int _getBookingCountForDay(DateTime day) {
-    return _getBookingsForDay(day).length;
+  List<OrderModel> _getOrdersForDay(DateTime day) {
+    final normalizedDay = DateTime(day.year, day.month, day.day);
+    return _ordersForDays[normalizedDay] ?? [];
+  }
+
+  int _getOrderCountForDay(DateTime day) {
+    return _getOrdersForDay(day).length;
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -31,7 +56,6 @@ class _AdminBookingScreenState extends State<AdminBookingScreen> {
       setState(() {
         _selectedDay = selectedDay;
         _focusedDay = focusedDay;
-        _selectedBookings = _getBookingsForDay(selectedDay);
       });
     }
   }
@@ -40,20 +64,19 @@ class _AdminBookingScreenState extends State<AdminBookingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Manage Bookings'),
+        title: const Text('Manage Bookings'),
       ),
       body: Column(
         children: [
-          TableCalendar<Booking>(
+          TableCalendar<OrderModel>(
             firstDay: DateTime.utc(2020, 1, 1),
             lastDay: DateTime.utc(2030, 12, 31),
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            eventLoader: _getBookingsForDay,
             onDaySelected: _onDaySelected,
             calendarStyle: CalendarStyle(
               outsideDaysVisible: false,
-              todayDecoration: BoxDecoration(
+              todayDecoration: const BoxDecoration(
                 color: Colors.orangeAccent,
                 shape: BoxShape.circle,
               ),
@@ -62,6 +85,7 @@ class _AdminBookingScreenState extends State<AdminBookingScreen> {
                 shape: BoxShape.circle,
               ),
             ),
+            eventLoader: _getOrdersForDay,
             startingDayOfWeek: StartingDayOfWeek.monday,
             onPageChanged: (focusedDay) {
               _focusedDay = focusedDay;
@@ -69,23 +93,26 @@ class _AdminBookingScreenState extends State<AdminBookingScreen> {
             availableCalendarFormats: const {
               CalendarFormat.month: 'Month',
             },
-            headerStyle:
-                HeaderStyle(titleCentered: true, formatButtonVisible: false),
+            headerStyle: const HeaderStyle(
+              titleCentered: true,
+              formatButtonVisible: false,
+            ),
             calendarBuilders: CalendarBuilders(
               markerBuilder: (context, date, events) {
-                if (events.isNotEmpty) {
+                int orderCount = _getOrderCountForDay(date);
+                if (orderCount > 0) {
                   return Positioned(
                     right: 1,
                     bottom: 1,
                     child: Container(
-                      padding: EdgeInsets.all(6),
-                      decoration: BoxDecoration(
+                      padding: const EdgeInsets.all(6),
+                      decoration: const BoxDecoration(
                         color: Colors.blue,
                         shape: BoxShape.circle,
                       ),
                       child: Text(
-                        '${_getBookingCountForDay(date)}',
-                        style: TextStyle().copyWith(
+                        '$orderCount',
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
                         ),
@@ -99,63 +126,23 @@ class _AdminBookingScreenState extends State<AdminBookingScreen> {
           ),
           const SizedBox(height: 8.0),
           Expanded(
-              child: ListView.builder(
-            itemCount: _selectedBookings.length,
-            itemBuilder: (context, index) {
-              return Card(
-                margin:
-                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
-                child: ListTile(
-                  title: Text(_selectedBookings[index].title),
-                  subtitle: Text(
-                    '${_selectedBookings[index].carMake} ${_selectedBookings[index].carModel} '
-                    '(${_selectedBookings[index].startTime.hour}:00 - ${_selectedBookings[index].endTime.hour}:00)',
-                  ),
+            child: _getOrdersForDay(_selectedDay!).isEmpty ? const Center(
+              child: Text('No orders found for the selected day.'),
+            ) : ListView.builder(
+              itemCount: _getOrdersForDay(_selectedDay!).length,
+              itemBuilder: (context, index) {
+                final order = _getOrdersForDay(_selectedDay!)[index];
+                return OrderCardViewWidget(
+                  order: order,
                   onTap: () {
-                    // Handle tap for booking details if needed
+
                   },
-                ),
-              );
-            },
-          )),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
   }
 }
-
-// Sample Event model for your booking
-class Booking {
-  final String title;
-  final String carMake;
-  final String carModel;
-  final DateTime startTime;
-  final DateTime endTime;
-
-  Booking({
-    required this.title,
-    required this.carMake,
-    required this.carModel,
-    required this.startTime,
-    required this.endTime,
-  });
-}
-
-final kEvents = {
-  DateTime.utc(2024, 10, 24): [
-    Booking(
-      title: 'Battery Replacement',
-      carMake: 'Chevrolet',
-      carModel: 'Malibu',
-      startTime: DateTime.utc(2024, 10, 24, 10),
-      endTime: DateTime.utc(2024, 10, 24, 11),
-    ),
-    Booking(
-      title: 'Brake Pad Change',
-      carMake: 'Nissan',
-      carModel: 'Altima',
-      startTime: DateTime.utc(2024, 10, 24, 13),
-      endTime: DateTime.utc(2024, 10, 24, 14),
-    ),
-  ],
-};
