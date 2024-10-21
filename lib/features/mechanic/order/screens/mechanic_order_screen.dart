@@ -49,7 +49,9 @@ class MechanicOrderScreen extends StatelessWidget {
                           return OrderCardViewWidget(
                             order: order,
                             onTap: () {
-
+                              Get.toNamed(
+                                AppRoutes.getMechanicOrderDetailsRoute(order.orderId),
+                              );
                             },
                           );
 
@@ -78,7 +80,7 @@ class MechanicOrderScreen extends StatelessWidget {
                           final order = completedOrders[index];
                           return OrderCardViewWidget(
                             onTap: () {
-
+                              Get.toNamed(AppRoutes.getMechanicOrderDetailsRoute(order.orderId));
                             },
                             order: order,
                           );

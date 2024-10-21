@@ -38,9 +38,13 @@ class _MechanicBookingScreenState extends State<MechanicBookingScreen> {
         ordersByDay[orderDate]!.add(order);
       }
 
-      setState(() {
-        _ordersForDays = ordersByDay;
-      });
+      if(mounted) {
+        setState(() {
+          _ordersForDays = ordersByDay;
+        });
+      }
+
+
     });
   }
 
@@ -137,7 +141,7 @@ class _MechanicBookingScreenState extends State<MechanicBookingScreen> {
                 return OrderCardViewWidget(
                   order: order,
                   onTap: () {
-                    Get.toNamed(AppRoutes.getAdminOrderDetailsRoute(order.orderId));
+                    Get.toNamed(AppRoutes.getMechanicOrderDetailsRoute(order.orderId));
                   },
                 );
               },

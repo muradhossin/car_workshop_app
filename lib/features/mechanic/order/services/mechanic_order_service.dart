@@ -87,6 +87,45 @@ class MechanicOrderService {
       ..sort((a, b) => b.orderPlacedDateTime!.compareTo(a.orderPlacedDateTime!)));
   }
 
+  Stream<OrderModel?> fetchOrderById(String orderId) {
+    return firestore
+        .collection(AppConstants.collectionOrders)
+        .where('orderId', isEqualTo: orderId)
+        .where('assignedMechanic.id', isEqualTo: auth.currentUser?.uid)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        return OrderModel.fromMap(snapshot.docs.first.data());
+      } else {
+        log('Order not found for orderId: $orderId');
+        return null;
+      }
+    });
+  }
+
+  Future<void> markOrderAsCompleted(String orderId) async {
+    try {
+      final querySnapshot = await firestore
+          .collection(AppConstants.collectionOrders)
+          .where('orderId', isEqualTo: orderId)
+          .where('assignedMechanic.id', isEqualTo: auth.currentUser?.uid)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final doc = querySnapshot.docs.first;
+
+        await firestore
+            .collection(AppConstants.collectionOrders)
+            .doc(doc.id)
+            .update({'orderStatus': OrderStatus.completed.name});
+      } else {
+        throw Exception('Order not found');
+      }
+    } catch (e) {
+      log('Error updating order status: $e', name: 'AdminOrderService.updateOrderStatus');
+      throw Exception('Error updating order status. Please try again.');
+    }
+  }
 
 
 }

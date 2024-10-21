@@ -1,3 +1,4 @@
+import 'package:car_workshop_app/constants/app_constants.dart';
 import 'package:car_workshop_app/features/admin/dashboard/widgets/custom_card_view.dart';
 import 'package:car_workshop_app/features/admin/mechanics/controllers/admin_mechanic_controller.dart';
 import 'package:car_workshop_app/features/admin/order/controllers/admin_order_controller.dart';
@@ -126,7 +127,7 @@ class MechanicHomeScreen extends StatelessWidget {
                             return OrderCardViewWidget(
                               order: order,
                               onTap: () {
-
+                                Get.toNamed(AppRoutes.getMechanicOrderDetailsRoute(order.orderId));
                               },
                             );
                           },
