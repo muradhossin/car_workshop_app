@@ -13,8 +13,8 @@ class OrderDetailRowWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Flexible(child: Text(label, style: Theme.of(context).textTheme.bodyMedium,)),
-          Flexible(child: Text(value, style: Theme.of(context).textTheme.bodyLarge)),
+          Text(label, style: Theme.of(context).textTheme.bodySmall,),
+          Flexible(child: Text(value, style: Theme.of(context).textTheme.bodyMedium)),
         ],
       ),
     );
