@@ -60,15 +60,7 @@ class UserOrderService {
         .map((snapshot) => snapshot.docs.length);
   }
 
-  Stream<List<OrderModel>> streamLatestOrdersForAdmin() {
-    return firestore
-        .collection(AppConstants.collectionOrders)
-        .orderBy('orderPlacedDateTime', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-        .map((doc) => OrderModel.fromMap(doc.data()))
-        .toList());
-  }
+
 }
 
 

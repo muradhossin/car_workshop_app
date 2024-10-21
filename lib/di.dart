@@ -1,7 +1,11 @@
+import 'package:car_workshop_app/features/admin/order/controllers/admin_order_controller.dart';
+import 'package:car_workshop_app/features/admin/order/services/admin_order_service.dart';
 import 'package:car_workshop_app/features/admin/service/controllers/admin_service_controller.dart';
 import 'package:car_workshop_app/features/admin/service/services/admin_service_service.dart';
 import 'package:car_workshop_app/features/auth/controllers/auth_controller.dart';
 import 'package:car_workshop_app/features/auth/services/auth_service.dart';
+import 'package:car_workshop_app/features/mechanic/profile/controllers/mechanic_profile_controller.dart';
+import 'package:car_workshop_app/features/mechanic/profile/services/mechanic_profile_service.dart';
 import 'package:car_workshop_app/features/user/cart/controllers/user_cart_controller.dart';
 import 'package:car_workshop_app/features/user/cart/services/user_cart_service.dart';
 import 'package:car_workshop_app/features/user/checkout/controllers/user_checkout_controller.dart';
@@ -40,7 +44,9 @@ class Di {
     Get.lazyPut<UserCartService>(() => UserCartService(firestore: firestore, auth: auth));
     Get.lazyPut<UserCheckoutService>(() => UserCheckoutService(firestore: firestore, auth: auth));
     Get.lazyPut<UserOrderService>(() => UserOrderService(firestore: firestore, auth: auth));
-   
+    Get.lazyPut<MechanicProfileService>(() => MechanicProfileService(firestore: firestore, auth: auth));
+    Get.lazyPut<AdminOrderService>(() => AdminOrderService(firestore: firestore, auth: auth));
+
 
     // Controllers
     Get.lazyPut<AuthController>(() => AuthController(authService: Get.find<AuthService>()));  
@@ -48,6 +54,8 @@ class Di {
     Get.lazyPut<UserCartController>(() => UserCartController(userCartService: Get.find<UserCartService>()));
     Get.lazyPut<UserCheckoutController>(() => UserCheckoutController(userCheckoutService: Get.find<UserCheckoutService>()));
     Get.lazyPut<UserOrderController>(() => UserOrderController(userOrderService: Get.find<UserOrderService>()));
+    Get.lazyPut<MechanicProfileController>(() => MechanicProfileController(mechanicProfileService: Get.find<MechanicProfileService>()));
+    Get.lazyPut<AdminOrderController>(() => AdminOrderController(adminOrderService: Get.find<AdminOrderService>()));
 
   }
 }

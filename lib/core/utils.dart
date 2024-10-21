@@ -22,6 +22,8 @@ Color getStatusColor(String? status) {
       return Colors.green;
     case 'pending':
       return Colors.orange;
+    case 'processing':
+      return Colors.blue;
     case 'cancelled':
       return Colors.red;
     default:
@@ -35,6 +37,8 @@ IconData getStatusIcon(String? status) {
       return Icons.check_circle;
     case 'pending':
       return Icons.pending;
+    case 'processing':
+      return Icons.build_circle_outlined;
     case 'cancelled':
       return Icons.cancel;
     default:

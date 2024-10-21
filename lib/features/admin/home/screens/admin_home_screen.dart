@@ -1,7 +1,9 @@
 import 'package:car_workshop_app/features/admin/dashboard/widgets/custom_card_view.dart';
+import 'package:car_workshop_app/features/admin/order/controllers/admin_order_controller.dart';
 import 'package:car_workshop_app/features/user/order/controllers/user_order_controller.dart';
 import 'package:car_workshop_app/features/user/order/models/order_model.dart';
 import 'package:car_workshop_app/features/user/order/widgets/order_card_view_widget.dart';
+import 'package:car_workshop_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -79,10 +81,10 @@ class AdminHomeScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 10),
-              GetBuilder<UserOrderController>(
+              GetBuilder<AdminOrderController>(
                 builder: (orderController) {
                   return StreamBuilder<List<OrderModel>>(
-                    stream: orderController.streamLatestOrdersForAdmin(),
+                    stream: orderController.streamLatestOrders(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
@@ -103,6 +105,7 @@ class AdminHomeScreen extends StatelessWidget {
                           return OrderCardViewWidget(
                             order: order,
                             onTap: () {
+                              Get.toNamed(AppRoutes.getAdminOrderDetailsRoute(order.orderId));
                             },
                           );
                         },

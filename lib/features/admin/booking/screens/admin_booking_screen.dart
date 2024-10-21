@@ -1,4 +1,4 @@
-import 'package:car_workshop_app/features/user/order/controllers/user_order_controller.dart';
+import 'package:car_workshop_app/features/admin/order/controllers/admin_order_controller.dart';
 import 'package:car_workshop_app/features/user/order/models/order_model.dart';
 import 'package:car_workshop_app/features/user/order/widgets/order_card_view_widget.dart';
 import 'package:flutter/material.dart';
@@ -14,19 +14,19 @@ class _AdminBookingScreenState extends State<AdminBookingScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   late Map<DateTime, List<OrderModel>> _ordersForDays;
-  late final UserOrderController _orderController;
+  late final AdminOrderController _orderController;
 
   @override
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    _orderController = Get.find<UserOrderController>();
+    _orderController = Get.find<AdminOrderController>();
     _ordersForDays = {};
     _fetchAllOrders();
   }
 
   Future<void> _fetchAllOrders() async {
-    _orderController.streamLatestOrdersForAdmin().listen((orders) {
+    _orderController.streamLatestOrders().listen((orders) {
       Map<DateTime, List<OrderModel>> ordersByDay = {};
       for (var order in orders) {
         final orderDate = DateTime(order.orderPlacedDateTime!.year, order.orderPlacedDateTime!.month, order.orderPlacedDateTime!.day);

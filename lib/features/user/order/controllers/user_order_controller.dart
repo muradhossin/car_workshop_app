@@ -22,7 +22,5 @@ class UserOrderController extends GetxController implements GetxService {
     return userOrderService.getTotalOrdersCount();
   }
 
-  Stream<List<OrderModel>> streamLatestOrdersForAdmin() {
-    return userOrderService.streamLatestOrdersForAdmin();
-  }
+
 }
