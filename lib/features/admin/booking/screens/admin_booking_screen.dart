@@ -1,6 +1,7 @@
 import 'package:car_workshop_app/features/admin/order/controllers/admin_order_controller.dart';
 import 'package:car_workshop_app/features/user/order/models/order_model.dart';
 import 'package:car_workshop_app/features/user/order/widgets/order_card_view_widget.dart';
+import 'package:car_workshop_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:get/get.dart';
@@ -135,7 +136,7 @@ class _AdminBookingScreenState extends State<AdminBookingScreen> {
                 return OrderCardViewWidget(
                   order: order,
                   onTap: () {
-
+                    Get.toNamed(AppRoutes.getAdminOrderDetailsRoute(order.orderId));
                   },
                 );
               },

@@ -1,4 +1,4 @@
-import 'package:car_workshop_app/features/mechanic/profile/models/mechanic_model.dart';
+import 'package:car_workshop_app/features/auth/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:car_workshop_app/features/admin/service/models/service_model.dart';
 
@@ -18,7 +18,7 @@ class OrderModel {
   final TimeOfDay? endTime;
   final String? userId;
   final List<ServiceModel>? services;
-  final MechanicModel? assignedMechanic;
+  final UserModel? assignedMechanic;
   final DateTime? orderPlacedDateTime;
   final String? orderStatus;
   final double? totalAmount;
@@ -59,7 +59,7 @@ class OrderModel {
     TimeOfDay? endTime,
     String? userId,
     List<ServiceModel>? services,
-    MechanicModel? assignedMechanic,
+    UserModel? assignedMechanic,
     DateTime? orderPlacedDateTime,
     String? orderStatus,
     double? totalAmount,
@@ -152,7 +152,7 @@ class OrderModel {
           map['services'].map((service) => ServiceModel.fromMap(service)))
           : null,
       assignedMechanic: map['assignedMechanic'] != null
-          ? MechanicModel.fromMap(map['assignedMechanic'])
+          ? UserModel.fromMap(map['assignedMechanic'])
           : null,
       orderPlacedDateTime: map['orderPlacedDateTime'] != null
           ? DateTime.parse(map['orderPlacedDateTime'])

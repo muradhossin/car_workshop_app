@@ -80,7 +80,7 @@ class UserOrderDetailsScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   OrderDetailRowWidget(label: 'Name', value: order.assignedMechanic?.name ?? 'N/A'),
-                                  OrderDetailRowWidget(label: 'Phone', value: order.assignedMechanic?.phoneNumber ?? 'N/A'),
+                                  OrderDetailRowWidget(label: 'Phone', value: order.assignedMechanic?.phone ?? 'N/A'),
                                   OrderDetailRowWidget(label: 'Email', value: order.assignedMechanic?.email ?? 'N/A'),
                                 ],
                               )

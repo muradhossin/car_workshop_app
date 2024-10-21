@@ -1,9 +1,9 @@
 import 'package:car_workshop_app/base_widgets/custom_button_widget.dart';
 import 'package:car_workshop_app/constants/app_constants.dart';
 import 'package:car_workshop_app/core/utils.dart';
+import 'package:car_workshop_app/features/admin/mechanics/controllers/admin_mechanic_controller.dart';
 import 'package:car_workshop_app/features/admin/order/controllers/admin_order_controller.dart';
-import 'package:car_workshop_app/features/mechanic/profile/controllers/mechanic_profile_controller.dart';
-import 'package:car_workshop_app/features/mechanic/profile/models/mechanic_model.dart';
+import 'package:car_workshop_app/features/auth/models/user_model.dart';
 import 'package:car_workshop_app/features/user/order/models/order_status.dart';
 import 'package:car_workshop_app/features/user/order/widgets/order_details_row_widget.dart';
 import 'package:car_workshop_app/features/user/order/widgets/order_info_card_widget.dart';
@@ -22,16 +22,14 @@ class AdminOrderDetailsScreen extends StatefulWidget {
 
 class AdminOrderDetailsScreenState extends State<AdminOrderDetailsScreen> {
   late AdminOrderController _orderController;
-  late MechanicProfileController _mechanicController;
-
-  MechanicModel? _selectedMechanic;
+  late AdminMechanicController _adminMechanicController;
   bool isFirstTime = false;
 
   @override
   void initState() {
     super.initState();
     _orderController = Get.find<AdminOrderController>();
-    _mechanicController = Get.find<MechanicProfileController>();
+    _adminMechanicController = Get.find<AdminMechanicController>();
   }
 
   @override
@@ -55,6 +53,7 @@ class AdminOrderDetailsScreenState extends State<AdminOrderDetailsScreen> {
                 final order = snapshot.data!;
                 if(!isFirstTime) {
                   orderController.setSelectedOrderStatus(order.orderStatus, isUpdate: false);
+                  orderController.setSelectedMechanic(order.assignedMechanic, isUpdate: false);
                   isFirstTime = true;
                 }
                 return Column(
@@ -74,6 +73,74 @@ class AdminOrderDetailsScreenState extends State<AdminOrderDetailsScreen> {
                                 OrderDetailRowWidget(label: 'Created', value: formatDateTime(order.orderPlacedDateTime.toString())),
                               ],
                             ),
+
+
+                            order.orderStatus != OrderStatus.completed.name || order.orderStatus != OrderStatus.cancelled.name ?  OrderInfoCardWidget(
+                              title: 'Assign Mechanic',
+                              children: [
+                                StreamBuilder<List<UserModel>>(
+                                  stream: _adminMechanicController.getApprovedMechanics(),
+                                  builder: (context, mechanicSnapshot) {
+                                    if (!mechanicSnapshot.hasData) {
+                                      return const Text('Loading mechanics...');
+                                    }
+                                    return DropdownButton<UserModel>(
+                                      isExpanded: true,
+                                      value: orderController.selectedMechanic,
+                                      hint: const Text('Select a mechanic'),
+                                      items: mechanicSnapshot.data!
+                                          .map((mechanic) => DropdownMenuItem<UserModel>(
+                                        value: mechanic,
+                                        child: Text(mechanic.name ?? 'N/A'),
+                                      ))
+                                          .toList(),
+                                      onChanged: (newMechanic) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Confirm Mechanic Change'),
+                                              content: Text('Are you sure you want to assign "${newMechanic?.name}" mechanic?'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text('Cancel'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    if(order.assignedMechanic?.id != newMechanic?.id)  {
+                                                      orderController.setSelectedMechanic(newMechanic);
+                                                      orderController.assignMechanic(order.orderId!, newMechanic!);
+                                                      Navigator.of(context).pop();
+                                                    } else {
+                                                      Navigator.of(context).pop();
+                                                      showCustomSnacker('No changes', 'Please select a different mechanic to assign', isError: true);
+                                                    }
+
+                                                  },
+                                                  child: const Text('Confirm'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                            ) : const SizedBox(),
+
+                            if (orderController.selectedMechanic != null)
+                              OrderInfoCardWidget(
+                                title: 'Assigned Mechanic',
+                                children: [
+                                  OrderDetailRowWidget(label: 'Name', value: orderController.selectedMechanic?.name ?? 'N/A'),
+                                  OrderDetailRowWidget(label: 'Phone', value: orderController.selectedMechanic?.phone ?? 'N/A'),
+                                ],
+                              ),
 
                             // Customer Information
                             OrderInfoCardWidget(
@@ -163,7 +230,6 @@ class AdminOrderDetailsScreenState extends State<AdminOrderDetailsScreen> {
                             hint: const Text('Change Order Status'),
                             items: [OrderStatus.pending.name, OrderStatus.processing.name, OrderStatus.completed.name, OrderStatus.cancelled.name]
                                 .map((status) => DropdownMenuItem<String>(
-
                               value: status,
                               child: Text(capitalize(status)),
                             ))

@@ -38,4 +38,27 @@ class UserModel {
       if (role == UserRole.mechanic.name) 'mechanicStatus': mechanicStatus,
     };
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is UserModel &&
+        other.id == id &&
+        other.email == email &&
+        other.name == name &&
+        other.phone == phone &&
+        other.role == role &&
+        other.mechanicStatus == mechanicStatus;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+    email.hashCode ^
+    name.hashCode ^
+    phone.hashCode ^
+    role.hashCode ^
+    mechanicStatus.hashCode;
+  }
 }
