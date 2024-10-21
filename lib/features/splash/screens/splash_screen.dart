@@ -3,6 +3,7 @@ import 'package:car_workshop_app/core/styles.dart';
 import 'package:car_workshop_app/features/auth/controllers/auth_controller.dart';
 import 'package:car_workshop_app/features/auth/models/user_model.dart';
 import 'package:car_workshop_app/features/auth/models/user_role.dart';
+import 'package:car_workshop_app/features/mechanic/profile/models/mechanic_status.dart';
 import 'package:car_workshop_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,7 +19,12 @@ class SplashScreen extends StatelessWidget {
         if (user?.role == UserRole.admin.name) {
           Get.offNamed(AppRoutes.getAdminDashboardRoute());
         } else if (user?.role == UserRole.mechanic.name) {
-          Get.offNamed(AppRoutes.getMechanicDashboardRoute());
+          if(user?.mechanicStatus == MechanicStatus.rejected.name || user?.mechanicStatus == MechanicStatus.pending.name) {
+            authController.logout(isShowSnacker: false);
+          }else{
+            Get.offNamed(AppRoutes.getMechanicDashboardRoute());
+          }
+
         } else if (user?.role == UserRole.user.name) {
           Get.offNamed(AppRoutes.getUserDashboardRoute());
         }

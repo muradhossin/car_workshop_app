@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:car_workshop_app/core/utils.dart';
@@ -7,6 +8,7 @@ import 'package:car_workshop_app/features/auth/services/auth_service.dart';
 import 'package:car_workshop_app/routes/app_routes.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthController extends GetxController implements GetxService {
   final AuthService authService;
@@ -55,7 +57,10 @@ class AuthController extends GetxController implements GetxService {
       showCustomSnacker(
           'Network Error', 'Please check your internet connection.',
           isError: true);
+    } on FirebaseAuthException catch (e) {
+      showCustomSnacker('Error', e.message ?? 'An error occurred', isError: true);
     } catch (e) {
+      log('Error during login: $e', name: 'AuthController.login');
       showCustomSnacker('Error', e.toString(), isError: true);
     } finally {
       isLoading = false;
@@ -87,7 +92,10 @@ class AuthController extends GetxController implements GetxService {
       showCustomSnacker(
           'Network Error', 'Please check your internet connection.',
           isError: true);
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
+      showCustomSnacker('Error', e.message ?? 'An error occurred', isError: true);
+    }
+    catch (e) {
       showCustomSnacker('Error', e.toString(), isError: true);
     } finally {
       isLoading = false;
@@ -99,10 +107,10 @@ class AuthController extends GetxController implements GetxService {
     return authService.isLoggedIn();
   }
 
-  Future<void> logout() async {
+  Future<void> logout({bool isShowSnacker = true}) async {
     await authService.logout();
     Get.offAllNamed(AppRoutes.getLoginRoute());
-    showCustomSnacker('Logout', 'You have been successfully logged out');
+    if(isShowSnacker) showCustomSnacker('Logout', 'You have been successfully logged out');
   }
 
   Future<UserModel?> getCurrentUser() {

@@ -32,6 +32,19 @@ class AuthService {
           Map<String, dynamic> userData =
               userDoc.data() as Map<String, dynamic>;
           UserModel userModel = UserModel.fromMap(userData);
+          if(userModel.role == UserRole.mechanic.name) {
+            if(userModel.mechanicStatus == MechanicStatus.rejected.name) {
+              auth.signOut();
+              throw FirebaseAuthException(
+                  code: 'mechanic-rejected',
+                  message: 'Mechanic registration has been rejected. Contact with admin');
+            }else if(userModel.mechanicStatus == MechanicStatus.pending.name) {
+              auth.signOut();
+              throw FirebaseAuthException(
+                  code: 'mechanic-pending',
+                  message: 'Mechanic registration is pending for admin approval.');
+            }
+          }
           return userModel;
         } else {
           throw FirebaseAuthException(
@@ -47,6 +60,14 @@ class AuthService {
       } else if (e.code == 'wrong-password') {
         throw FirebaseAuthException(
             code: 'wrong-password', message: 'Wrong password provided.');
+      } else if(e.code == 'mechanic-rejected') {
+        throw FirebaseAuthException(
+            code: 'mechanic-rejected',
+            message: 'Mechanic registration has been rejected.');
+      } else if(e.code == 'mechanic-pending') {
+        throw FirebaseAuthException(
+            code: 'mechanic-pending',
+            message: 'Mechanic registration is pending for admin approval.');
       } else {
         throw Exception('User not found. Please try again.');
       }
