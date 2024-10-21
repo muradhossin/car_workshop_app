@@ -17,4 +17,12 @@ class MechanicOrderController extends GetxController implements GetxService {
   Stream<List<OrderModel>> getLatestOrders() {
     return mechanicOrderService.getLatestOrders();
   }
+
+  Stream<List<OrderModel>> fetchCompletedOrders() {
+    return mechanicOrderService.fetchCompletedOrders();
+  }
+
+  Stream<List<OrderModel>> fetchRunningOrders() {
+    return mechanicOrderService.fetchRunningOrders();
+  }
 }

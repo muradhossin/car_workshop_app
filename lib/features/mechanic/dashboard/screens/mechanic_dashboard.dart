@@ -61,7 +61,7 @@ class MechanicDashboardState extends State<MechanicDashboard> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home_repair_service),
-            label: 'Services',
+            label: 'Orders',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:car_workshop_app/constants/app_constants.dart';
 import 'package:car_workshop_app/features/user/order/models/order_model.dart';
+import 'package:car_workshop_app/features/user/order/models/order_status.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
@@ -60,6 +61,30 @@ class MechanicOrderService {
         .map((snapshot) => snapshot.docs
         .map((doc) => OrderModel.fromMap(doc.data()))
         .toList());
+  }
+
+  Stream<List<OrderModel>> fetchRunningOrders() {
+    return firestore
+        .collection(AppConstants.collectionOrders)
+        .where('assignedMechanic.id', isEqualTo: auth.currentUser?.uid)
+        .where('orderStatus', whereIn: [OrderStatus.pending.name, OrderStatus.processing.name])
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((doc) => OrderModel.fromMap(doc.data()))
+        .toList()
+      ..sort((a, b) => b.orderPlacedDateTime!.compareTo(a.orderPlacedDateTime!)));
+  }
+
+  Stream<List<OrderModel>> fetchCompletedOrders() {
+    return firestore
+        .collection(AppConstants.collectionOrders)
+        .where('assignedMechanic.id', isEqualTo: auth.currentUser?.uid)
+        .where('orderStatus', whereIn: [OrderStatus.completed.name, OrderStatus.cancelled.name])
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((doc) => OrderModel.fromMap(doc.data()))
+        .toList()
+      ..sort((a, b) => b.orderPlacedDateTime!.compareTo(a.orderPlacedDateTime!)));
   }
 
 
