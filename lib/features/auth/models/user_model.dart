@@ -1,9 +1,12 @@
+import 'package:car_workshop_app/features/auth/models/user_role.dart';
+
 class UserModel {
   String? id;
   String? email;
   String? name;
   String? phone;
   String? role;
+  String? mechanicStatus;
 
   UserModel({
     required this.email,
@@ -11,6 +14,7 @@ class UserModel {
     required this.phone,
     required this.role,
     required this.id,
+    this.mechanicStatus,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
@@ -20,6 +24,7 @@ class UserModel {
       name: map['name'],
       phone: map['phone'],
       role: map['role'],
+      mechanicStatus: map['role'] == UserRole.mechanic.name ? map['mechanicStatus'] : null,
     );
   }
 
@@ -30,6 +35,7 @@ class UserModel {
       'name': name,
       'phone': phone,
       'role': role,
+      if (role == UserRole.mechanic.name) 'mechanicStatus': mechanicStatus,
     };
   }
 }

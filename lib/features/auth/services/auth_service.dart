@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:car_workshop_app/constants/app_constants.dart';
 import 'package:car_workshop_app/features/auth/models/user_model.dart';
+import 'package:car_workshop_app/features/auth/models/user_role.dart';
+import 'package:car_workshop_app/features/mechanic/profile/models/mechanic_status.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -74,6 +76,7 @@ class AuthService {
           'phone': phone,
           'email': email,
           'role': role,
+          if(role == UserRole.mechanic.name) 'mechanicStatus': MechanicStatus.pending.name,
         });
         log('User registered successfully: ${user.uid}',
             name: 'AuthService.register');

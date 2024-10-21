@@ -1,4 +1,5 @@
 import 'package:car_workshop_app/features/admin/dashboard/widgets/custom_card_view.dart';
+import 'package:car_workshop_app/features/admin/mechanics/controllers/admin_mechanic_controller.dart';
 import 'package:car_workshop_app/features/admin/order/controllers/admin_order_controller.dart';
 import 'package:car_workshop_app/features/user/order/controllers/user_order_controller.dart';
 import 'package:car_workshop_app/features/user/order/models/order_model.dart';
@@ -65,10 +66,33 @@ class AdminHomeScreen extends StatelessWidget {
                             }
                           },
                         ),
-                        const CustomCardView(
-                          icon: Icons.person,
-                          title: 'Total Mechanics',
-                          value: '10',
+                        GetBuilder<AdminMechanicController>(
+                          builder: (mechanicController) {
+                            return StreamBuilder(
+                              stream: mechanicController.getMechanicsCount(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return const CustomCardView(
+                                    icon: Icons.person,
+                                    title: 'Total Mechanics',
+                                    value: '...',
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return const CustomCardView(
+                                    icon: Icons.error,
+                                    title: 'Total Mechanics',
+                                    value: 'Error',
+                                  );
+                                } else {
+                                  return CustomCardView(
+                                    icon: Icons.person,
+                                    title: 'Total Mechanics',
+                                    value: snapshot.data.toString().padLeft(2, '0'),
+                                  );
+                                }
+                              },
+                            );
+                          },
                         ),
                       ],
                     );

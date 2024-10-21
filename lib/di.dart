@@ -1,3 +1,5 @@
+import 'package:car_workshop_app/features/admin/mechanics/controllers/admin_mechanic_controller.dart';
+import 'package:car_workshop_app/features/admin/mechanics/services/admin_mechani_service.dart';
 import 'package:car_workshop_app/features/admin/order/controllers/admin_order_controller.dart';
 import 'package:car_workshop_app/features/admin/order/services/admin_order_service.dart';
 import 'package:car_workshop_app/features/admin/service/controllers/admin_service_controller.dart';
@@ -46,6 +48,7 @@ class Di {
     Get.lazyPut<UserOrderService>(() => UserOrderService(firestore: firestore, auth: auth));
     Get.lazyPut<MechanicProfileService>(() => MechanicProfileService(firestore: firestore, auth: auth));
     Get.lazyPut<AdminOrderService>(() => AdminOrderService(firestore: firestore, auth: auth));
+    Get.lazyPut<AdminMechanicService>(() => AdminMechanicService(firestore: firestore, auth: auth));
 
 
     // Controllers
@@ -56,6 +59,7 @@ class Di {
     Get.lazyPut<UserOrderController>(() => UserOrderController(userOrderService: Get.find<UserOrderService>()));
     Get.lazyPut<MechanicProfileController>(() => MechanicProfileController(mechanicProfileService: Get.find<MechanicProfileService>()));
     Get.lazyPut<AdminOrderController>(() => AdminOrderController(adminOrderService: Get.find<AdminOrderService>()));
+    Get.lazyPut<AdminMechanicController>(() => AdminMechanicController(adminMechanicService: Get.find<AdminMechanicService>()));
 
   }
 }
