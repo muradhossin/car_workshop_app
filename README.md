@@ -2,12 +2,18 @@
 
 Welcome to the Car Workshop Mobile App! This Flutter application allows users to book car servicing, view services, and manage appointments. It's designed with role-based access, enabling users, mechanics, and admins to interact efficiently within the app.
 
+## Screenshot 
+![Alt text](https://res.cloudinary.com/dntre6bam/image/upload/v1729626199/1_frksob.png)
+![Alt text](https://res.cloudinary.com/dntre6bam/image/upload/v1729626200/2_mwslni.png)
+![Alt text](https://res.cloudinary.com/dntre6bam/image/upload/v1729626200/3_slz2ss.png)
+![Alt text](https://res.cloudinary.com/dntre6bam/image/upload/v1729626201/4_pqytxl.png)
+
+
 ## Table of Contents
 
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
-- [Usage](#usage)
 - [App Access](#app-access)
 - [Contributing](#contributing)
 - [License](#license)
@@ -31,14 +37,24 @@ Welcome to the Car Workshop Mobile App! This Flutter application allows users to
 To run this app on your local machine, follow these steps:
 
 1. Clone the repository:
-   git clone https://github.com/muradhossin/car_workshop_app.git
+```bash
+  git clone https://github.com/muradhossin/car_workshop_app.git
+```
 2. Navigate to the project directory:
-   cd car_workshop_app
+```bash
+  cd car_workshop_app
+```
 3. Clean and get dependencies:
-   flutter clean
-   flutter pub get
+```bash
+  flutter clean
+```
+```bash
+  flutter pub get
+```
 4. Run the app:
-   flutter run
+```bash
+  flutter run
+```
 
 ## App Access
 
@@ -55,4 +71,3 @@ Contributions are welcome! If you have suggestions or improvements, please creat
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
